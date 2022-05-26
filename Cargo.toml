@@ -1,0 +1,26 @@
+[package]
+name = "iridium"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+winit = "0.26"
+env_logger = "0.9"
+log = "0.4"
+wgpu = "0.12"
+pollster = "0.2"
+glam = "0.20"
+bytemuck = "1.9"
+imgui-wgpu = "0.19"
+imgui = "0.8"
+imgui-winit-support = { version = "0.8", default-features = false, features = ["winit-26"] }
+
+[dependencies.image]
+version = "0.24"
+default-features = true
+
+[profile.release]
+lto = true
+opt-level = 3
