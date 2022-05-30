@@ -94,6 +94,14 @@ impl Camera {
         self.cam_position = self.cam_position.lerp(self.cam_dest, s);
         self.view_mat = Self::view_matrix(self.rotation, self.cam_position);
     }
+
+    pub(crate) fn perspective_mat(&self) -> Mat4 {
+        self.perspective_mat
+    }
+
+    pub(crate) fn view_mat(&self) -> Mat4 {
+        self.view_mat
+    }
 }
 
 impl Movement {

@@ -1,5 +1,6 @@
 use std::{rc::Rc, time::Instant};
 
+use glam::Vec3;
 use winit::{
     event::{Event, WindowEvent, KeyboardInput, ElementState, VirtualKeyCode},
     event_loop::{ControlFlow, EventLoop},
@@ -11,7 +12,8 @@ async fn run() {
     let event_loop = EventLoop::new();
     let window = Rc::new(WindowBuilder::new().build(&event_loop).unwrap());
     
-    let mut renderer = iridium::Renderer::new(window.clone()).await;
+    let mut app = iridium::App::new(window.clone()).await;
+    app.add_boid(Vec3::new(0.0, 0.0, 0.0));
     let mut cur = Instant::now();
     
     event_loop.run(move |event, _, control_flow| {
@@ -22,7 +24,7 @@ async fn run() {
             Event::WindowEvent {
                 event: ref win_event,
                 window_id,
-            } if window_id == window.id() => if !renderer.input(win_event, &event) { // UPDATED!
+            } if window_id == window.id() => if !app.input(win_event, &event) { // UPDATED!
                 match win_event {
                     WindowEvent::CloseRequested
                     | WindowEvent::KeyboardInput {
@@ -35,10 +37,10 @@ async fn run() {
                         ..
                     } => *control_flow = ControlFlow::Exit,
                     WindowEvent::Resized(physical_size) => {
-                        renderer.resize(*physical_size);
+                        app.resize(*physical_size);
                     }
                     WindowEvent::ScaleFactorChanged { new_inner_size, .. } => {
-                        renderer.resize(**new_inner_size);
+                        app.resize(**new_inner_size);
                     }
                     _ => {}
                 }
@@ -47,7 +49,8 @@ async fn run() {
             },
             _ => {}
         }
-        renderer.render(delta_t).unwrap();
+        app.update();
+        app.render(delta_t);
 
     });
 }
